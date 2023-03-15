@@ -1,0 +1,19 @@
+.todo {
+    @apply flex flex-col items-center h-screen;
+
+    &__title {
+        @apply font-bold text-3xl my-4;
+    }
+    &__form {
+        @apply flex my-4;
+    }
+    &__list{
+        @apply w-full flex-1 overflow-y-auto;
+    }
+    &__list-item{
+        @apply flex items-center m-4;
+    }
+    &__filter{
+        @apply flex w-full;
+    }
+}
