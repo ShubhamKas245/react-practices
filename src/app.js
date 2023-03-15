@@ -25,11 +25,14 @@
 import React, { Component, createRef } from 'react'
 import './style.scss';
 import './todo.scss'
+import TodoFilter from './TodoFilter';
+import TodoForm from './TodoForm';
+import TodoList from './TodoList';
 
 export default class app extends Component {
   state={
-    todoText:"",
     todoList:[],
+    filter:'All',
   }
   todoTextRef=createRef();
 
@@ -40,35 +43,56 @@ export default class app extends Component {
 
   addTodo=(e)=>{e.preventDefault(); 
 
-    this.setState(({todoList})=>({todoList:[...todoList,{id:new Date().valueOf(), text:this.todoTextRef.current.value}],}),
-    ()=>{this.todoTextRef.current.value=''})}
+    this.setState(({todoList})=>({todoList:[...todoList,{id:new Date().valueOf(), 
+      text:this.todoTextRef.current.value,isDone:false}],}),
+    ()=>{this.todoTextRef.current.value=''})
+  }
+
+  updateTodo=(item)=>{
+   console.log(item);
+   this.setState(({todoList})=>{
+    const index = todoList.findIndex((x)=>x.id===item.id);
+    return {
+      todoList:[
+        ...todoList.slice(0,index),
+        {...item,isDone:!item.isDone},
+        ...todoList.slice(index+1),
+      ],
+    }
+   })
+  }
+
+  deleteTodo=(item)=>{
+    const isConfirmed=confirm(`Are u want to delete this item`);
+    if(isConfirmed){
+    this.setState(({todoList})=>{
+     const index = todoList.findIndex((x)=>x.id===item.id);
+     return {
+       todoList:[
+         ...todoList.slice(0,index),
+         ...todoList.slice(index+1),
+       ],
+     }
+    })}
+   }
+
+   filterTodo=(filter)=>{
+     this.setState({filter})
+   }
+
   render() {
-    const {todoList}=this.state;
+    const {todoList,filter}=this.state;
     return (
       <div className='todo'>
         <h1 className='todo__title'>Todo App</h1>
-        <form className='todo__form' onSubmit={this.addTodo}>
-          <div>
-            <label htmlFor='todoText' className='sr-only'>Todo</label>
-            <input ref={this.todoTextRef} type="text" id="todoText" className='rounded-l-md'
-            //  value={this.state.todoText} onChange={this.changeText} 
-            />
-          </div>
-          <button type="submit" className='btn rounded-r-md'> Add Todo</button>
-        </form >
+        <TodoForm addTodo={this.addTodo} ref={this.todoTextRef} />
         <div className='todo__list'>
-          {todoList.map((x)=> <div className='todo__list-item' key={x.id}>
-            <input type="checkbox" />
-            <p className='px-4 flex-1'>{x.text}</p>
-            <button type="button" className='btn rounded-md'>Delete</button>
-          </div>)}
-         
+          {todoList.length > 0 && (
+        <TodoList todoList={todoList} filter={filter} updateTodo={this.updateTodo} deleteTodo={this.deleteTodo} />
+        )}
         </div>
-        <div className='todo__filter'>
-          <button type='button' className='btn btn--active flex-1'>All</button>
-          <button type='button' className='btn flex-1'>Pending</button>
-          <button type='button' className='btn flex-1'>Completed</button>
-        </div>
+        
+         <TodoFilter filter={filter} filterTodo={this.filterTodo}/>
       </div>
     )
   }
