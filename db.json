@@ -1,19 +1,19 @@
 {
-  "posts": [
+  "todoList": [
     {
-      "id": 1,
-      "title": "json-server",
-      "author": "typicode"
-    }
-  ],
-  "comments": [
+      "text": "shubham",
+      "isDone": false,
+      "id": 5
+    },
     {
-      "id": 1,
-      "body": "some comment",
-      "postId": 1
+      "text": "nn",
+      "isDone": false,
+      "id": 6
+    },
+    {
+      "text": "nns",
+      "isDone": false,
+      "id": 7
     }
-  ],
-  "profile": {
-    "name": "typicode"
-  }
+  ]
 }
